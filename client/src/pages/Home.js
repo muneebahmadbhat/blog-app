@@ -18,60 +18,72 @@ const Home = () => {
     fetchPosts();
   }, []);
 
-  // 🗑️ DELETE POST
   const handleDelete = async (id) => {
     try {
       await API.delete(`/api/posts/${id}`);
-      fetchPosts(); // refresh without reload
+      fetchPosts();
     } catch (err) {
       alert("Delete failed");
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      {/* TITLE */}
-      <h1 className="text-3xl font-bold mb-6 text-center">All Posts</h1>
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 px-6 py-10">
+      {/* HEADER */}
+      <div className="flex flex-col md:flex-row justify-between items-center mb-10">
+        <h1 className="text-4xl font-bold text-gray-800 mb-4 md:mb-0">
+          📝 All Posts
+        </h1>
 
-      {/* CREATE BUTTON */}
-      <div className="text-center mb-6">
         <Link
           to="/create"
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-6 py-2 rounded-lg shadow-md hover:opacity-90 transition duration-200 font-semibold"
         >
-          Create Post
+          + Create Post
         </Link>
       </div>
 
-      {/* POSTS */}
+      {/* EMPTY STATE */}
       {posts.length === 0 ? (
-        <p className="text-center text-gray-500">No posts found</p>
+        <div className="text-center mt-20">
+          <p className="text-gray-500 text-lg">No posts yet 😕</p>
+          <p className="text-gray-400">Start by creating your first post!</p>
+        </div>
       ) : (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        /* POSTS GRID */
+        <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts.map((post) => (
-            <div key={post._id} className="bg-white p-4 rounded-xl shadow-md">
-              <h2 className="text-xl font-semibold mb-2">{post.title}</h2>
+            <div
+              key={post._id}
+              className="bg-white p-5 rounded-2xl shadow-md hover:shadow-xl transition duration-300 border border-gray-100 flex flex-col justify-between"
+            >
+              {/* CONTENT AREA */}
+              <div>
+                <h2 className="text-2xl font-semibold text-gray-800 mb-2">
+                  {post.title}
+                </h2>
 
-              <p className="text-gray-600 mb-3">{post.content}</p>
+                <p className="text-gray-600 mb-4 line-clamp-3">
+                  {post.content}
+                </p>
 
-              <p className="text-sm text-gray-400 mb-3">
-                By {post.author?.name}
-              </p>
+                <p className="text-sm text-gray-400 mb-4">
+                  ✍️ {post.author?.name || "Unknown"}
+                </p>
+              </div>
 
-              {/* ACTION BUTTONS */}
-              <div className="flex gap-2">
-                {/* EDIT */}
+              {/* ACTIONS (ALWAYS AT BOTTOM) */}
+              <div className="flex justify-between items-center mt-4">
                 <Link
                   to={`/edit/${post._id}`}
-                  className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
+                  className="bg-yellow-400 text-white px-4 py-1.5 rounded-lg hover:bg-yellow-500 transition duration-200 text-sm font-medium"
                 >
                   Edit
                 </Link>
 
-                {/* DELETE */}
                 <button
                   onClick={() => handleDelete(post._id)}
-                  className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                  className="bg-red-500 text-white px-4 py-1.5 rounded-lg hover:bg-red-600 transition duration-200 text-sm font-medium"
                 >
                   Delete
                 </button>
